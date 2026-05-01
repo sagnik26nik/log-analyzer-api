@@ -1,9 +1,9 @@
 // api/analyze.js
 // Vercel serverless function — proxies Groq API call (free tier)
-// API key stays server-side, never exposed to browser
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', 'https://sagnik26nik.github.io');
+  // Allow ALL origins during development/demo
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
   const { logText } = req.body;
   if (!logText || typeof logText !== 'string') return res.status(400).json({ error: 'logText is required' });
-  if (logText.length > 10000) return res.status(400).json({ error: 'Log too large. Max 10,000 characters.' });
+  if (logText.length > 10000) return res.status(400).json({ error: 'Log too large.' });
 
   try {
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
